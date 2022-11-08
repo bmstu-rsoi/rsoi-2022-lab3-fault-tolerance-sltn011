@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "name": "Run Postman",
+      "setup": "",
+      "run": "newman run --delay-request=100 --folder=success --environment <variant>/postman/environment.json <variant>/postman/collection.json",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": 10
+    }
+  ]
+}
