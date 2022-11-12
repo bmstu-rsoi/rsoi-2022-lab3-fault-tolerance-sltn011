@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     name: Autograding
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
@@ -46,8 +46,6 @@ jobs:
           ./scripts/wait-script.sh
         env:
           WAIT_PORTS: 8080,8070,8060,8050
-
-      # TODO setup variant, service and port
 
       - name: Run API Tests
         timeout-minutes: 5
