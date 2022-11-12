@@ -1,10 +1,10 @@
 package ru.RSOI.Gateway.Error;
 
-public class EError500 {
+public class EError503 {
 
     public String message;
 
-    public EError500(EInternalServerError error)
+    public EError503(EServiceUnavailableError error)
     {
         this.message = error.message;
     }

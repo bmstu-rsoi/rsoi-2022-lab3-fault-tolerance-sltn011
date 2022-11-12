@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class EError500Handler {
+public class EError503Handler {
 
-    @ExceptionHandler(EInternalServerError.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public EError500 HandleInternalServerError(EInternalServerError error) {
-        return new EError500(error);
+    @ExceptionHandler(EServiceUnavailableError.class)
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    public EError503 HandleServiceUnavailableError(EServiceUnavailableError error) {
+        return new EError503(error);
     }
 
 }

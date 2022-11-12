@@ -8,7 +8,7 @@ import org.springframework.web.client.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import ru.RSOI.Gateway.Error.EBadRequestError;
 import ru.RSOI.Gateway.Error.ECarsErrorBase;
-import ru.RSOI.Gateway.Error.EInternalServerError;
+import ru.RSOI.Gateway.Error.EServiceUnavailableError;
 import ru.RSOI.Gateway.Error.ENotFoundError;
 import ru.RSOI.Gateway.FaultTolerance.FTCircuitBreaker;
 import ru.RSOI.Gateway.FaultTolerance.FTDelayedCommand;
@@ -186,7 +186,7 @@ public class CGateway {
         if (CarsCircuitBreaker.GetState() != FTCircuitBreaker.State.Closed)
         {
             // Cars not available now! Fallback
-            throw new EInternalServerError("Cars service not available! 1");
+            throw new EServiceUnavailableError("Cars service not available! 1");
         }
 
         return getCarsPage(page, size, showAll);
@@ -197,7 +197,7 @@ public class CGateway {
     {
         if (RentCircuitBreaker.GetState() != FTCircuitBreaker.State.Closed)
         {
-            throw new EInternalServerError("Rent service not available! 2");
+            throw new EServiceUnavailableError("Rent service not available! 2");
         }
 
         return getAllUserRentsList(username);
@@ -219,7 +219,7 @@ public class CGateway {
         // Request car
         if (CarsCircuitBreaker.GetState() != FTCircuitBreaker.State.Closed)
         {
-            throw new EInternalServerError("Cars service not available! 3");
+            throw new EServiceUnavailableError("Cars service not available! 3");
         }
         MCarInfo car = requestAvailableCar(carUid);
         if (car.available)
@@ -240,7 +240,7 @@ public class CGateway {
         if (PaymentCircuitBreaker.GetState() != FTCircuitBreaker.State.Closed)
         {
             setCarAvailable(carUid, true);
-            throw new EInternalServerError("Payment service not available! 4");
+            throw new EServiceUnavailableError("Payment service not available! 4");
         }
         MRentPaymentInfo paymentInfo;
         try {
@@ -249,7 +249,7 @@ public class CGateway {
         catch (ECarsErrorBase e)
         {
             setCarAvailable(carUid, true);
-            throw new EInternalServerError(e.toString());
+            throw new EServiceUnavailableError(e.toString());
         }
 
         // Create rent
@@ -257,7 +257,7 @@ public class CGateway {
         {
             setCarAvailable(carUid, true);
             cancelPayment(paymentInfo.paymentUid.toString());
-            throw new EInternalServerError("Rents service not available! 5");
+            throw new EServiceUnavailableError("Rents service not available! 5");
         }
         MRentInfo rentInfo;
         try {
@@ -267,7 +267,7 @@ public class CGateway {
         {
             setCarAvailable(carUid, true);
             cancelPayment(paymentInfo.paymentUid.toString());
-            throw new EInternalServerError(e.toString());
+            throw new EServiceUnavailableError(e.toString());
         }
 
         return new MRentSuccess(rentInfo.rentalUid, rentInfo.status, rentInfo.car.carUid,
@@ -279,7 +279,7 @@ public class CGateway {
     {
         if (RentCircuitBreaker.GetState() != FTCircuitBreaker.State.Closed)
         {
-            throw new EInternalServerError("Rent service not available! 6");
+            throw new EServiceUnavailableError("Rent service not available! 6");
         }
 
         return getUserRentByUid(username, rentalUid);
@@ -295,7 +295,7 @@ public class CGateway {
         }
         catch (ECarsErrorBase e)
         {
-            throw new EInternalServerError(e.toString());
+            throw new EServiceUnavailableError(e.toString());
         }
 
         if (rentInfo.status.equals("IN_PROGRESS"))
@@ -303,7 +303,7 @@ public class CGateway {
             try {
                 setCarAvailable(rentInfo.car.carUid.toString(), true);
             }
-            catch (EInternalServerError e)
+            catch (EServiceUnavailableError e)
             {
                 DelayedCommands.add(new FTDelayedCommand(FTDelayedCommand.Type.CarUncheck, rentInfo.car.carUid, null));
                 DelayedCommands.add(new FTDelayedCommand(FTDelayedCommand.Type.RentCancel, rentInfo.rentalUid, username));
@@ -314,7 +314,7 @@ public class CGateway {
             try{
                 cancelRent(username, rentalUid);
             }
-            catch (EInternalServerError e)
+            catch (EServiceUnavailableError e)
             {
                 DelayedCommands.add(new FTDelayedCommand(FTDelayedCommand.Type.RentCancel, rentInfo.rentalUid, username));
                 DelayedCommands.add(new FTDelayedCommand(FTDelayedCommand.Type.PaymentCancel, rentInfo.payment.paymentUid, null));
@@ -324,7 +324,7 @@ public class CGateway {
             try {
                 cancelPayment(rentInfo.payment.paymentUid.toString());
             }
-            catch (EInternalServerError e)
+            catch (EServiceUnavailableError e)
             {
                 DelayedCommands.add(new FTDelayedCommand(FTDelayedCommand.Type.PaymentCancel, rentInfo.payment.paymentUid, null));
                 return;
@@ -342,7 +342,7 @@ public class CGateway {
         }
         catch (ECarsErrorBase e)
         {
-            throw new EInternalServerError(e.toString());
+            throw new EServiceUnavailableError(e.toString());
         }
 
         if (rentInfo.status.equals("IN_PROGRESS"))
@@ -350,7 +350,7 @@ public class CGateway {
             try {
                 setCarAvailable(rentInfo.car.carUid.toString(), true);
             }
-            catch (EInternalServerError e)
+            catch (EServiceUnavailableError e)
             {
                 DelayedCommands.add(new FTDelayedCommand(FTDelayedCommand.Type.CarUncheck, rentInfo.car.carUid, null));
                 DelayedCommands.add(new FTDelayedCommand(FTDelayedCommand.Type.RentFinish, rentInfo.rentalUid, username));
@@ -360,7 +360,7 @@ public class CGateway {
             try{
                 finishRent(username, rentalUid);
             }
-            catch (EInternalServerError e)
+            catch (EServiceUnavailableError e)
             {
                 DelayedCommands.add(new FTDelayedCommand(FTDelayedCommand.Type.RentFinish, rentInfo.rentalUid, username));
                 return;
@@ -372,7 +372,7 @@ public class CGateway {
     {
         if(CarsCircuitBreaker.GetState() != FTCircuitBreaker.State.Closed)
         {
-            throw new EInternalServerError("Cars service not available! 7");
+            throw new EServiceUnavailableError("Cars service not available! 7");
         }
 
         String url = UriComponentsBuilder.fromHttpUrl(CarsService)
@@ -405,7 +405,7 @@ public class CGateway {
             System.out.println(e);
             CarsCircuitBreaker.OnFail();
             // Cars not available now! Fallback
-            throw new EInternalServerError("Cars service not available! 8 " + e.toString());
+            throw new EServiceUnavailableError("Cars service not available! 8 " + e.toString());
         }
         if (response.getStatusCode() == HttpStatus.NOT_FOUND)
         {
@@ -631,7 +631,7 @@ public class CGateway {
     {
         if (CarsCircuitBreaker.GetState() != FTCircuitBreaker.State.Closed)
         {
-            throw new EInternalServerError("Cars service not available! 9");
+            throw new EServiceUnavailableError("Cars service not available! 9");
         }
 
         String url = UriComponentsBuilder.fromHttpUrl(CarsService + "/request/" + carUid)
@@ -660,7 +660,7 @@ public class CGateway {
         {
             System.out.println(e);
             CarsCircuitBreaker.OnFail();
-            throw new EInternalServerError("Cars service not available! 10");
+            throw new EServiceUnavailableError("Cars service not available! 10");
         }
         if (response.getStatusCode() == HttpStatus.NOT_FOUND)
         {
@@ -681,7 +681,7 @@ public class CGateway {
     {
         if (RentCircuitBreaker.GetState() != FTCircuitBreaker.State.Closed)
         {
-            throw new EInternalServerError("Rents service not available! 11");
+            throw new EServiceUnavailableError("Rents service not available! 11");
         }
 
         String url = UriComponentsBuilder.fromHttpUrl(RentService)
@@ -711,7 +711,7 @@ public class CGateway {
         {
             System.out.println(e);
             RentCircuitBreaker.OnFail();
-            throw new EInternalServerError("Rent service not available! 12 " + e.toString());
+            throw new EServiceUnavailableError("Rent service not available! 12 " + e.toString());
         }
         if (response.getStatusCode() == HttpStatus.NOT_FOUND)
         {
@@ -753,7 +753,7 @@ public class CGateway {
     {
         if (PaymentCircuitBreaker.GetState() != FTCircuitBreaker.State.Closed)
         {
-            throw new EInternalServerError("Payments service not available! 13");
+            throw new EServiceUnavailableError("Payments service not available! 13");
         }
 
         String url = UriComponentsBuilder.fromHttpUrl(PaymentService + "/" + Integer.toString(price))
@@ -782,7 +782,7 @@ public class CGateway {
         {
             System.out.println(e);
             PaymentCircuitBreaker.OnFail();
-            throw new EInternalServerError(e.toString());
+            throw new EServiceUnavailableError(e.toString());
         }
         if (response.getStatusCode() == HttpStatus.NOT_FOUND)
         {
@@ -806,7 +806,7 @@ public class CGateway {
     {
         if (RentCircuitBreaker.GetState() != FTCircuitBreaker.State.Closed)
         {
-            throw new EInternalServerError("Rents service not available! 14");
+            throw new EServiceUnavailableError("Rents service not available! 14");
         }
 
         String url = UriComponentsBuilder.fromHttpUrl(RentService)
@@ -841,7 +841,7 @@ public class CGateway {
         {
             System.out.println(e);
             RentCircuitBreaker.OnFail();
-            throw new EInternalServerError("Rent service not available! 15 " + e.toString());
+            throw new EServiceUnavailableError("Rent service not available! 15 " + e.toString());
         }
         if (response.getStatusCode() == HttpStatus.NOT_FOUND)
         {
@@ -861,7 +861,7 @@ public class CGateway {
     {
         if (CarsCircuitBreaker.GetState() != FTCircuitBreaker.State.Closed)
         {
-            throw new EInternalServerError("Cars service not available! 16");
+            throw new EServiceUnavailableError("Cars service not available! 16");
         }
 
         String url = UriComponentsBuilder.fromHttpUrl(
@@ -891,7 +891,7 @@ public class CGateway {
         {
             System.out.println(e);
             CarsCircuitBreaker.OnFail();
-            throw new EInternalServerError("Cars service not available! 17 " + e.toString());
+            throw new EServiceUnavailableError("Cars service not available! 17 " + e.toString());
         }
         if (response.getStatusCode() == HttpStatus.NOT_FOUND)
         {
@@ -910,7 +910,7 @@ public class CGateway {
     {
         if (RentCircuitBreaker.GetState() != FTCircuitBreaker.State.Closed)
         {
-            throw new EInternalServerError("Rents service not available! 18");
+            throw new EServiceUnavailableError("Rents service not available! 18");
         }
 
         String url = UriComponentsBuilder.fromHttpUrl(RentService + "/" + rentalUid + "/cancel")
@@ -940,7 +940,7 @@ public class CGateway {
         {
             System.out.println(e);
             RentCircuitBreaker.OnFail();
-            throw new EInternalServerError("Rents service not available! 19" + e.toString());
+            throw new EServiceUnavailableError("Rents service not available! 19" + e.toString());
         }
         if (response.getStatusCode() == HttpStatus.NOT_FOUND)
         {
@@ -958,7 +958,7 @@ public class CGateway {
     {
         if (RentCircuitBreaker.GetState() != FTCircuitBreaker.State.Closed)
         {
-            throw new EInternalServerError("Rents service not available! 20");
+            throw new EServiceUnavailableError("Rents service not available! 20");
         }
 
         String url = UriComponentsBuilder.fromHttpUrl(RentService + "/" + rentalUid + "/finish")
@@ -988,7 +988,7 @@ public class CGateway {
         {
             System.out.println(e);
             RentCircuitBreaker.OnFail();
-            throw new EInternalServerError("Rents service not available! 21");
+            throw new EServiceUnavailableError("Rents service not available! 21");
         }
         if (response.getStatusCode() == HttpStatus.NOT_FOUND)
         {
@@ -1006,7 +1006,7 @@ public class CGateway {
     {
         if (PaymentCircuitBreaker.GetState() != FTCircuitBreaker.State.Closed)
         {
-            throw new EInternalServerError("Payment service not available! 22");
+            throw new EServiceUnavailableError("Payment service not available! 22");
         }
 
         String url = UriComponentsBuilder.fromHttpUrl(PaymentService + "/" + paymentUid)
@@ -1035,7 +1035,7 @@ public class CGateway {
         {
             System.out.println(e);
             PaymentCircuitBreaker.OnFail();
-            throw new EInternalServerError("Payment service not available! 23");
+            throw new EServiceUnavailableError("Payment service not available! 23");
         }
         if (response.getStatusCode() == HttpStatus.NOT_FOUND)
         {
