@@ -70,7 +70,7 @@ public class CGateway {
                 {
                     System.out.println(e);
                     CarsCircuitBreaker.OnFail(); // Microservice still not working
-                    throw new EBadRequestError(e.toString(), new ArrayList<>());
+                    throw new EServiceUnavailableError("Cars Service unavailable");
                 }
                 if (response.getStatusCode() == HttpStatus.OK)
                 {
@@ -116,7 +116,7 @@ public class CGateway {
                 {
                     System.out.println(e);
                     RentCircuitBreaker.OnFail(); // Microservice still not working
-                    throw new EBadRequestError(e.toString(), new ArrayList<>());
+                    throw new EServiceUnavailableError("Rental Service unavailable");
                 }
                 if (response.getStatusCode() == HttpStatus.OK)
                 {
@@ -162,7 +162,7 @@ public class CGateway {
                 {
                     System.out.println(e);
                     PaymentCircuitBreaker.OnFail(); // Microservice still not working
-                    throw new EBadRequestError(e.toString(), new ArrayList<>());
+                    throw new EServiceUnavailableError("Payment Service unavailable");
                 }
                 if (response.getStatusCode() == HttpStatus.OK)
                 {
@@ -405,7 +405,7 @@ public class CGateway {
             System.out.println(e);
             CarsCircuitBreaker.OnFail();
             // Cars not available now! Fallback
-            throw new EServiceUnavailableError("Cars service not available! 8 " + e.toString());
+            throw new EServiceUnavailableError("Cars Service unavailable");
         }
         if (response.getStatusCode() == HttpStatus.NOT_FOUND)
         {
@@ -660,7 +660,7 @@ public class CGateway {
         {
             System.out.println(e);
             CarsCircuitBreaker.OnFail();
-            throw new EServiceUnavailableError("Cars service not available! 10");
+            throw new EServiceUnavailableError("Cars Service unavailable");
         }
         if (response.getStatusCode() == HttpStatus.NOT_FOUND)
         {
@@ -711,7 +711,7 @@ public class CGateway {
         {
             System.out.println(e);
             RentCircuitBreaker.OnFail();
-            throw new EServiceUnavailableError("Rent service not available! 12 " + e.toString());
+            throw new EServiceUnavailableError("Rental Service unavailable");
         }
         if (response.getStatusCode() == HttpStatus.NOT_FOUND)
         {
@@ -782,7 +782,7 @@ public class CGateway {
         {
             System.out.println(e);
             PaymentCircuitBreaker.OnFail();
-            throw new EServiceUnavailableError(e.toString());
+            throw new EServiceUnavailableError("Payment Service unavailable");
         }
         if (response.getStatusCode() == HttpStatus.NOT_FOUND)
         {
@@ -841,7 +841,7 @@ public class CGateway {
         {
             System.out.println(e);
             RentCircuitBreaker.OnFail();
-            throw new EServiceUnavailableError("Rent service not available! 15 " + e.toString());
+            throw new EServiceUnavailableError("Rental Service unavailable");
         }
 
         if (response.getStatusCode() == HttpStatus.NOT_FOUND)
@@ -892,7 +892,7 @@ public class CGateway {
         {
             System.out.println(e);
             CarsCircuitBreaker.OnFail();
-            throw new EServiceUnavailableError("Cars service not available! 17 " + e.toString());
+            throw new EServiceUnavailableError("Cars Service unavailable");
         }
         if (response.getStatusCode() == HttpStatus.NOT_FOUND)
         {
@@ -941,7 +941,7 @@ public class CGateway {
         {
             System.out.println(e);
             RentCircuitBreaker.OnFail();
-            throw new EServiceUnavailableError("Rents service not available! 19" + e.toString());
+            throw new EServiceUnavailableError("Rental Service unavailable");
         }
         if (response.getStatusCode() == HttpStatus.NOT_FOUND)
         {
@@ -989,7 +989,7 @@ public class CGateway {
         {
             System.out.println(e);
             RentCircuitBreaker.OnFail();
-            throw new EServiceUnavailableError("Rents service not available! 21");
+            throw new EServiceUnavailableError("Rental Service unavailable");
         }
         if (response.getStatusCode() == HttpStatus.NOT_FOUND)
         {
@@ -1036,7 +1036,7 @@ public class CGateway {
         {
             System.out.println(e);
             PaymentCircuitBreaker.OnFail();
-            throw new EServiceUnavailableError("Payment service not available! 23");
+            throw new EServiceUnavailableError("Payment Service unavailable");
         }
         if (response.getStatusCode() == HttpStatus.NOT_FOUND)
         {
