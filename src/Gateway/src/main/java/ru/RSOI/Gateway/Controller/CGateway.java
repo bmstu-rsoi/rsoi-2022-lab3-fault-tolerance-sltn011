@@ -66,7 +66,7 @@ public class CGateway {
                     System.out.println(e);
                     throw new EBadRequestError(e.toString(), new ArrayList<>());
                 }
-                catch (HttpServerErrorException e)
+                catch (RestClientException e)
                 {
                     System.out.println(e);
                     CarsCircuitBreaker.OnFail(); // Microservice still not working
@@ -112,7 +112,7 @@ public class CGateway {
                     System.out.println(e);
                     throw new EBadRequestError(e.toString(), new ArrayList<>());
                 }
-                catch (HttpServerErrorException e)
+                catch (RestClientException e)
                 {
                     System.out.println(e);
                     RentCircuitBreaker.OnFail(); // Microservice still not working
@@ -158,7 +158,7 @@ public class CGateway {
                     System.out.println(e);
                     throw new EBadRequestError(e.toString(), new ArrayList<>());
                 }
-                catch (HttpServerErrorException e)
+                catch (RestClientException e)
                 {
                     System.out.println(e);
                     PaymentCircuitBreaker.OnFail(); // Microservice still not working
@@ -400,7 +400,7 @@ public class CGateway {
             System.out.println(e);
             throw new EBadRequestError(e.toString(), new ArrayList<>());
         }
-        catch (HttpServerErrorException e)
+        catch (RestClientException e)
         {
             System.out.println(e);
             CarsCircuitBreaker.OnFail();
@@ -472,7 +472,7 @@ public class CGateway {
             System.out.println(e);
             throw new EBadRequestError(e.toString(), new ArrayList<>());
         }
-        catch (HttpServerErrorException e)
+        catch (RestClientException e)
         {
             System.out.println(e);
             CarsCircuitBreaker.OnFail();
@@ -549,7 +549,7 @@ public class CGateway {
             System.out.println(e);
             throw new EBadRequestError(e.toString(), new ArrayList<>());
         }
-        catch (HttpServerErrorException e)
+        catch (RestClientException e)
         {
             System.out.println(e);
             PaymentCircuitBreaker.OnFail();
@@ -656,7 +656,7 @@ public class CGateway {
             System.out.println(e);
             throw new EBadRequestError(e.toString(), new ArrayList<>());
         }
-        catch (HttpServerErrorException e)
+        catch (RestClientException e)
         {
             System.out.println(e);
             CarsCircuitBreaker.OnFail();
@@ -707,7 +707,7 @@ public class CGateway {
             System.out.println(e);
             throw new EBadRequestError(e.toString(), new ArrayList<>());
         }
-        catch (HttpServerErrorException e)
+        catch (RestClientException e)
         {
             System.out.println(e);
             RentCircuitBreaker.OnFail();
@@ -778,7 +778,7 @@ public class CGateway {
             System.out.println(e);
             throw new EBadRequestError(e.toString(), new ArrayList<>());
         }
-        catch (HttpServerErrorException e)
+        catch (RestClientException e)
         {
             System.out.println(e);
             PaymentCircuitBreaker.OnFail();
@@ -837,15 +837,11 @@ public class CGateway {
             System.out.println(e);
             throw new EBadRequestError(e.toString(), new ArrayList<>());
         }
-        catch (HttpServerErrorException e)
+        catch (RestClientException e)
         {
             System.out.println(e);
             RentCircuitBreaker.OnFail();
             throw new EServiceUnavailableError("Rent service not available! 15 " + e.toString());
-        }
-        catch (RestClientResponseException e)
-        {
-            throw new EBadRequestError(e.getStatusText() + " " + e.getClass().toString() + " " + e.toString(), new ArrayList<>());
         }
 
         if (response.getStatusCode() == HttpStatus.NOT_FOUND)
@@ -892,7 +888,7 @@ public class CGateway {
             System.out.println(e);
             throw new EBadRequestError(e.toString(), new ArrayList<>());
         }
-        catch (HttpServerErrorException e)
+        catch (RestClientException e)
         {
             System.out.println(e);
             CarsCircuitBreaker.OnFail();
@@ -941,7 +937,7 @@ public class CGateway {
             System.out.println(e);
             throw new EBadRequestError(e.toString(), new ArrayList<>());
         }
-        catch (HttpServerErrorException e)
+        catch (RestClientException e)
         {
             System.out.println(e);
             RentCircuitBreaker.OnFail();
@@ -989,7 +985,7 @@ public class CGateway {
             System.out.println(e);
             throw new EBadRequestError(e.toString(), new ArrayList<>());
         }
-        catch (HttpServerErrorException e)
+        catch (RestClientException e)
         {
             System.out.println(e);
             RentCircuitBreaker.OnFail();
@@ -1036,7 +1032,7 @@ public class CGateway {
             System.out.println(e);
             throw new EBadRequestError(e.toString(), new ArrayList<>());
         }
-        catch (HttpServerErrorException e)
+        catch (RestClientException e)
         {
             System.out.println(e);
             PaymentCircuitBreaker.OnFail();
