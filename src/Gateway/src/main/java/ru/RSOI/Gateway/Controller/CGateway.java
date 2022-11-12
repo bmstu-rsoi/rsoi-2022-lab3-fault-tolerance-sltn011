@@ -904,7 +904,7 @@ public class CGateway {
         }
 
         CarsCircuitBreaker.OnSuccess();
-
+        System.out.println("SetCarAvailable success!");
     }
 
     void cancelRent(String username, String rentalUid)
@@ -953,6 +953,7 @@ public class CGateway {
         }
 
         RentCircuitBreaker.OnSuccess();
+        System.out.println("CancelRent success!");
     }
 
     void finishRent(String username, String rentalUid)
@@ -1048,6 +1049,7 @@ public class CGateway {
         }
 
         PaymentCircuitBreaker.OnSuccess();
+        System.out.println("CancelPayment success!");
     }
 
     void processDelayedCommands()

@@ -18,7 +18,7 @@ public class FTCircuitBreaker {
     {
         this.CircuitState = State.Closed;
         this.FailsCounter = 0;
-        this.MaxFails = 1;
+        this.MaxFails = 3;
 
         this.RetryTime = 10 * 1000;
     }
