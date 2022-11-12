@@ -69,30 +69,6 @@ jobs:
           column_offset: 'F'
           mark: "'+"
 
-      - name: GatewayLogs
-        if: always()
-        continue-on-error: true
-        timeout-minutes: 1
-        run:
-          docker-compose logs -t -f gateway
-      - name: CarsLogs
-        if: always()
-        continue-on-error: true
-        timeout-minutes: 1
-        run:
-          docker-compose logs -t -f cars
-      - name: RentalLogs
-        if: always()
-        continue-on-error: true
-        timeout-minutes: 1
-        run:
-          docker-compose logs -t -f rental
-      - name: PaymentLogs
-        if: always()
-        continue-on-error: true
-        timeout-minutes: 1
-        run:
-          docker-compose logs -t -f payment
       - name: Stop containers
         if: always()
         continue-on-error: true

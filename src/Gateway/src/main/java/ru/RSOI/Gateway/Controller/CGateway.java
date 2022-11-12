@@ -843,6 +843,11 @@ public class CGateway {
             RentCircuitBreaker.OnFail();
             throw new EServiceUnavailableError("Rent service not available! 15 " + e.toString());
         }
+        catch (RestClientException e)
+        {
+            throw new EBadRequestError(e.toString(), new ArrayList<>());
+        }
+
         if (response.getStatusCode() == HttpStatus.NOT_FOUND)
         {
             throw new ENotFoundError(response.getBody());

@@ -91,26 +91,6 @@ public class CRental {
             throw error;
         }
 
-        /*
-        List<MRental> carRents = rentRepo.findCarRents(carUid, "IN_PROGRESS");
-        boolean isFree = true;
-        for (MRental rent : carRents)
-        {
-            boolean starts_after = (dateFrom.compareTo(rent.v6_date_to) >= 0);
-            boolean ends_before = (dateTo.compareTo(rent.v5_date_from) <= 0);
-            if (!starts_after && !ends_before)
-            {
-                isFree = false;
-                break;
-            }
-        }
-        if(!isFree)
-        {
-            EBadRequestError error = new EBadRequestError("Rent date overlaps with another", new ArrayList<>());
-            throw error;
-        }
-         */
-
         MRental newRent = new MRental();
         newRent.v2_username = username;
         newRent.v3_payment_uid = paymentUid;
