@@ -52,8 +52,8 @@ jobs:
         run: ./scripts/test-script.sh
         env:
           VARIANT: v3
-          SERVICE_NAME: rental
-          PORT_NUMBER: 8060
+          SERVICE_NAME: payment
+          PORT_NUMBER: 8050
 
       - uses: education/autograding@v1
         id: autograder
