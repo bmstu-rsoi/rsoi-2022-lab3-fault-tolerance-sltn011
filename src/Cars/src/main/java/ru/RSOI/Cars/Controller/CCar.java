@@ -54,18 +54,13 @@ public class CCar {
     {
         UUID carUidVal = UUID.fromString(carUid);
         MCar car = findAnyCar(carUidVal);
-        updateAvailability(car, isSetAvailable);
-        carRepo.deleteById(car.getId());
-        return carRepo.save(car);
+        return updateAvailability(car, isSetAvailable);
     }
 
     @PutMapping("/request/{carUid}")
     public MCar requestAvailableCar(@PathVariable String carUid)
     {
-        MCar car = findAvailableCar(UUID.fromString(carUid));
-        updateAvailability(car, false);
-        carRepo.deleteById(car.getId());
-        return carRepo.save(car);
+        return findAvailableCar(UUID.fromString(carUid));
     }
 
     private Iterable<MCar> getCarsPage(int page, int size, boolean showAll)
@@ -114,7 +109,8 @@ public class CCar {
     private MCar updateAvailability(MCar car, boolean isSetAvailable)
     {
         car.v8_availability = isSetAvailable;
-        return car;
+        carRepo.deleteById(car.getId());
+        return carRepo.save(car);
     }
 
     private MCar fillValues(MCar car, Map<String, String> values)

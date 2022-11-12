@@ -1,7 +1,6 @@
 package ru.RSOI.Gateway.Model;
 
 import java.util.UUID;
-
 public class MRentSuccess {
 
     public UUID rentalUid;

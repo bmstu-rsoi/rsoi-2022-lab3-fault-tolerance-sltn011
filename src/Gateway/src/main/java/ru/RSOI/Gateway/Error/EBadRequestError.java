@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-public class EBadRequestError extends RuntimeException {
+public class EBadRequestError extends ECarsErrorBase {
     public String message;
     public List<EError400Description> errors;
 
