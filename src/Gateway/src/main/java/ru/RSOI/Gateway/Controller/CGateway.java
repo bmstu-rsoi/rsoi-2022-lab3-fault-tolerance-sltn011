@@ -22,13 +22,13 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/api/v1")
 public class CGateway {
 
-    public static final String CarsService    = "http://localhost:8070/api/v1/sys/cars";
-    public static final String RentService    = "http://localhost:8060/api/v1/sys/rental";
-    public static final String PaymentService = "http://localhost:8050/api/v1/sys/payment";
+    public static final String CarsService    = "http://cars:8070/api/v1/sys/cars";
+    public static final String RentService    = "http://rental:8060/api/v1/sys/rental";
+    public static final String PaymentService = "http://payment:8050/api/v1/sys/payment";
 
-    public static final String CarsManager    = "http://localhost:8070/manage/health";
-    public static final String RentManager    = "http://localhost:8060/manage/health";
-    public static final String PaymentManager = "http://localhost:8050/manage/health";
+    public static final String CarsManager    = "http://cars:8070/manage/health";
+    public static final String RentManager    = "http://rental:8060/manage/health";
+    public static final String PaymentManager = "http://payment:8050/manage/health";
 
     private FTCircuitBreaker CarsCircuitBreaker;
     private FTCircuitBreaker RentCircuitBreaker;

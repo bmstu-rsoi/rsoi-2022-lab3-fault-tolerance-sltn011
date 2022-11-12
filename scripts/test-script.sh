@@ -21,6 +21,15 @@ timed() {
   LC_NUMERIC=C printf "\nTotal runtime: %02d min %02d seconds\n" "$dm" "$ds"
 }
 
+success() {
+  newman run \
+    --delay-request=100 \
+    --folder=success \
+    --export-environment "$variant"/postman/environment.json \
+    --environment "$variant"/postman/environment.json \
+    "$variant"/postman/collection.json
+}
+
 step() {
   local step=$1
   [[ $((step % 2)) -eq 0 ]] && operation="start" || operation="stop"
@@ -35,6 +44,7 @@ step() {
   newman run \
     --delay-request=100 \
     --folder=step"$step" \
+    --export-environment "$variant"/postman/environment.json \
     --environment "$variant"/postman/environment.json \
     "$variant"/postman/collection.json
 
@@ -45,6 +55,9 @@ start=$(date +%s)
 trap 'timed $start' EXIT
 
 printf "=== Start test scenario ===\n"
+
+# success execute
+success
 
 # stop service
 step 1

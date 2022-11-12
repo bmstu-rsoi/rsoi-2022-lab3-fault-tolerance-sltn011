@@ -9,12 +9,33 @@ services:
       POSTGRES_PASSWORD: "postgres"
       POSTGRES_DB: postgres
     volumes:
-      - db-data:/var/lib/postgresql/data
-      - ./postgres/:/docker-entrypoint-initdb.d/
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5432:5432"
-
-# TODO добавить сервисы
+      
+  gateway:
+    image: gateway
+    build: ./src/Gateway/
+    ports:
+      - "8080:8080"
+      
+  cars:
+    image: cars
+    build: ./src/Cars/
+    ports:
+      - "8070:8070"
+      
+  rental:
+    image: rental
+    build: ./src/Rental/
+    ports:
+      - "8060:8060"
+      
+  payment:
+    image: payment
+    build: ./src/Payment/
+    ports:
+      - "8050:8050"
 
 volumes:
   db-data:
