@@ -442,7 +442,7 @@ public class CGateway {
         {
             // Fallback
             try {
-                return new MRentCarInfo(UUID.fromString(carUid), null, null, null);
+                return new MRentCarInfo(null, null, null, null);
             }
             catch (IllegalArgumentException UidE)
             {
@@ -478,7 +478,7 @@ public class CGateway {
             CarsCircuitBreaker.OnFail();
             try {
                 // Cars not available now! Fallback
-                return new MRentCarInfo(UUID.fromString(carUid), null, null, null);
+                return new MRentCarInfo(null, null, null, null);
             }
             catch (IllegalArgumentException UidE)
             {
@@ -519,7 +519,7 @@ public class CGateway {
         {
             // Fallback
             try {
-                return new MRentPaymentInfo(UUID.fromString(paymentUid), null, null);
+                return new MRentPaymentInfo(null, null, null);
             }
             catch (IllegalArgumentException UidE)
             {
@@ -555,7 +555,7 @@ public class CGateway {
             PaymentCircuitBreaker.OnFail();
             // Fallback
             try {
-                return new MRentPaymentInfo(UUID.fromString(paymentUid), null, null);
+                return new MRentPaymentInfo(null, null, null);
             }
             catch (IllegalArgumentException UidE)
             {
