@@ -47,9 +47,6 @@ jobs:
         env:
           WAIT_PORTS: 8080,8070,8060,8050
 
-      - name: Attach
-        run: docker-compose logs -f -t
-
       - name: Run API Tests
         timeout-minutes: 5
         run: ./scripts/test-script.sh
@@ -75,21 +72,25 @@ jobs:
       - name: GatewayLogs
         if: always()
         continue-on-error: true
+        timeout-minutes: 1
         run:
           docker-compose logs -t -f gateway
       - name: CarsLogs
         if: always()
         continue-on-error: true
+        timeout-minutes: 1
         run:
           docker-compose logs -t -f cars
       - name: RentalLogs
         if: always()
         continue-on-error: true
+        timeout-minutes: 1
         run:
           docker-compose logs -t -f rental
       - name: PaymentLogs
         if: always()
         continue-on-error: true
+        timeout-minutes: 1
         run:
           docker-compose logs -t -f payment
       - name: Stop containers
