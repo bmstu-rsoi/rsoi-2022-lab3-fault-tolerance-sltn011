@@ -4,6 +4,6 @@ public class MRentCarFilter {
     @Override
     public boolean equals(Object obj) {
         MRentCarInfo carInfo = (MRentCarInfo) obj;
-        return carInfo.registrationNumber != null && carInfo.model != null && carInfo.brand != null;
+        return carInfo != null && carInfo.registrationNumber != null && carInfo.model != null && carInfo.brand != null;
     }
 }
