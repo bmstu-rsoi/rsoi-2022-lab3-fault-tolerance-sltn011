@@ -1,7 +1,6 @@
 package ru.RSOI.Gateway.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.UUID;
 
@@ -11,12 +10,13 @@ public class MRentInfo {
     public String status;
     public String dateFrom;
     public String dateTo;
-
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
     public MRentCarInfo car;
-
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
     public MRentPaymentInfo payment;
+
+    @JsonIgnore
+    public String paymentUid;
+    @JsonIgnore
+    public String carUid;
 
     public MRentInfo(
             UUID rentalUid, String status, String dateFrom, String dateTo, MRentCarInfo car, MRentPaymentInfo payment) {
@@ -24,24 +24,22 @@ public class MRentInfo {
         this.status = status;
         this.dateFrom = dateFrom;
         this.dateTo = dateTo;
+        this.car = car;
+        this.payment = payment;
+    }
 
-        if (new MRentCarFilter().equals(car))
-        {
-            this.car = car;
-        }
-        else
-        {
-            this.car = null;
-        }
+    public MRentInfo(
+            UUID rentalUid, String status, String dateFrom, String dateTo, MRentCarInfo car, MRentPaymentInfo payment,
+            String paymentUid, String carUid) {
+        this.rentalUid = rentalUid;
+        this.status = status;
+        this.dateFrom = dateFrom;
+        this.dateTo = dateTo;
+        this.car = car;
+        this.payment = payment;
 
-        if (new MRentPaymentFilter().equals(payment))
-        {
-            this.payment = payment;
-        }
-        else
-        {
-            this.payment = null;
-        }
+        this.paymentUid = paymentUid;
+        this.carUid = carUid;
     }
 
 }

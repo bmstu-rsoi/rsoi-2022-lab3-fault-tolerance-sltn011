@@ -301,13 +301,13 @@ public class CGateway {
         if (rentInfo.status.equals("IN_PROGRESS"))
         {
             try {
-                setCarAvailable(rentInfo.car.carUid.toString(), true);
+                setCarAvailable(rentInfo.carUid, true);
             }
             catch (EServiceUnavailableError e)
             {
                 DelayedCommands.add(new FTDelayedCommand(FTDelayedCommand.Type.CarUncheck, rentInfo.car.carUid, null));
                 DelayedCommands.add(new FTDelayedCommand(FTDelayedCommand.Type.RentCancel, rentInfo.rentalUid, username));
-                DelayedCommands.add(new FTDelayedCommand(FTDelayedCommand.Type.PaymentCancel, rentInfo.payment.paymentUid, null));
+                DelayedCommands.add(new FTDelayedCommand(FTDelayedCommand.Type.PaymentCancel, UUID.fromString(rentInfo.paymentUid), null));
                 return;
             }
 
@@ -317,16 +317,16 @@ public class CGateway {
             catch (EServiceUnavailableError e)
             {
                 DelayedCommands.add(new FTDelayedCommand(FTDelayedCommand.Type.RentCancel, rentInfo.rentalUid, username));
-                DelayedCommands.add(new FTDelayedCommand(FTDelayedCommand.Type.PaymentCancel, rentInfo.payment.paymentUid, null));
+                DelayedCommands.add(new FTDelayedCommand(FTDelayedCommand.Type.PaymentCancel, UUID.fromString(rentInfo.paymentUid), null));
                 return;
             }
 
             try {
-                cancelPayment(rentInfo.payment.paymentUid.toString());
+                cancelPayment(rentInfo.paymentUid);
             }
             catch (EServiceUnavailableError e)
             {
-                DelayedCommands.add(new FTDelayedCommand(FTDelayedCommand.Type.PaymentCancel, rentInfo.payment.paymentUid, null));
+                DelayedCommands.add(new FTDelayedCommand(FTDelayedCommand.Type.PaymentCancel, UUID.fromString(rentInfo.paymentUid), null));
                 return;
             }
         }
@@ -442,7 +442,7 @@ public class CGateway {
         {
             // Fallback
             try {
-                return new MRentCarInfo(UUID.fromString(carUid), null, null, null);
+                return new MRentCarInfo(null, null, null, null);
             }
             catch (IllegalArgumentException UidE)
             {
@@ -478,7 +478,7 @@ public class CGateway {
             CarsCircuitBreaker.OnFail();
             try {
                 // Cars not available now! Fallback
-                return new MRentCarInfo(UUID.fromString(carUid), null, null, null);
+                return new MRentCarInfo(null, null, null, null);
             }
             catch (IllegalArgumentException UidE)
             {
@@ -519,7 +519,7 @@ public class CGateway {
         {
             // Fallback
             try {
-                return new MRentPaymentInfo(UUID.fromString(paymentUid), null, null);
+                return new MRentPaymentInfo(null, null, null);
             }
             catch (IllegalArgumentException UidE)
             {
@@ -555,7 +555,7 @@ public class CGateway {
             PaymentCircuitBreaker.OnFail();
             // Fallback
             try {
-                return new MRentPaymentInfo(UUID.fromString(paymentUid), null, null);
+                return new MRentPaymentInfo(null, null, null);
             }
             catch (IllegalArgumentException UidE)
             {
@@ -613,7 +613,7 @@ public class CGateway {
         MRentCarInfo rentCarInfo = getRentCarInfo(carUidStr);
         MRentPaymentInfo rentPaymentInfo = getRentPaymentInfo(paymentUidStr);
 
-        return new MRentInfo(rentalUid, status, dateFrom, dateTo, rentCarInfo, rentPaymentInfo);
+        return new MRentInfo(rentalUid, status, dateFrom, dateTo, rentCarInfo, rentPaymentInfo, paymentUidStr, carUidStr);
     }
 
     private MCarInfo parseCarInfo(JSONObject obj)
@@ -741,7 +741,7 @@ public class CGateway {
 
     MRentInfo getUserRentByUid(String username, String rentalUid)
     {
-        List<MRentInfo> allUserRents = getAllUserRentsList(username);
+        List<MRentInfo> allUserRents = getAllUserRents(username);
         for (MRentInfo rentInfo : allUserRents)
         {
             if (rentalUid.equals(rentInfo.rentalUid.toString()))

@@ -3,7 +3,7 @@ package ru.RSOI.Gateway.Model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.UUID;
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MRentPaymentInfo
 {
     public UUID paymentUid;
