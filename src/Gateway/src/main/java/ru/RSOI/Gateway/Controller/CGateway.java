@@ -741,7 +741,7 @@ public class CGateway {
 
     MRentInfo getUserRentByUid(String username, String rentalUid)
     {
-        List<MRentInfo> allUserRents = getAllUserRents(username);
+        List<MRentInfo> allUserRents = getAllUserRentsList(username);
         for (MRentInfo rentInfo : allUserRents)
         {
             if (rentalUid.equals(rentInfo.rentalUid.toString()))

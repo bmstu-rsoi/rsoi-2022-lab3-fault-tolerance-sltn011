@@ -12,10 +12,10 @@ public class MRentInfo {
     public String dateFrom;
     public String dateTo;
 
-    @JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = MRentCarFilter.class)
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
     public MRentCarInfo car;
 
-    @JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = MRentPaymentFilter.class)
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
     public MRentPaymentInfo payment;
 
     public MRentInfo(
@@ -24,8 +24,24 @@ public class MRentInfo {
         this.status = status;
         this.dateFrom = dateFrom;
         this.dateTo = dateTo;
-        this.car = car;
-        this.payment = payment;
+
+        if (new MRentCarFilter().equals(car))
+        {
+            this.car = car;
+        }
+        else
+        {
+            this.car = null;
+        }
+
+        if (new MRentPaymentFilter().equals(payment))
+        {
+            this.payment = payment;
+        }
+        else
+        {
+            this.payment = null;
+        }
     }
 
 }
