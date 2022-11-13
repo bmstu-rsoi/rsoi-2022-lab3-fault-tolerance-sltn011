@@ -68,7 +68,11 @@ jobs:
           user_column: 'D'
           column_offset: 'F'
           mark: "'+"
+<<<<<<< HEAD
         
+=======
+          
+>>>>>>> parent of c8117da (Update classroom.yml)
       - name: GatewayLogs
         if: always()
         continue-on-error: true
