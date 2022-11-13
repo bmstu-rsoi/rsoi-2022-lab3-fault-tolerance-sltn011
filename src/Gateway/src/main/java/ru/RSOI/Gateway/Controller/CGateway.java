@@ -301,13 +301,13 @@ public class CGateway {
         if (rentInfo.status.equals("IN_PROGRESS"))
         {
             try {
-                setCarAvailable(rentInfo.car.carUid.toString(), true);
+                setCarAvailable(rentInfo.carUid, true);
             }
             catch (EServiceUnavailableError e)
             {
                 DelayedCommands.add(new FTDelayedCommand(FTDelayedCommand.Type.CarUncheck, rentInfo.car.carUid, null));
                 DelayedCommands.add(new FTDelayedCommand(FTDelayedCommand.Type.RentCancel, rentInfo.rentalUid, username));
-                DelayedCommands.add(new FTDelayedCommand(FTDelayedCommand.Type.PaymentCancel, rentInfo.payment.paymentUid, null));
+                DelayedCommands.add(new FTDelayedCommand(FTDelayedCommand.Type.PaymentCancel, UUID.fromString(rentInfo.paymentUid), null));
                 return;
             }
 
@@ -317,16 +317,16 @@ public class CGateway {
             catch (EServiceUnavailableError e)
             {
                 DelayedCommands.add(new FTDelayedCommand(FTDelayedCommand.Type.RentCancel, rentInfo.rentalUid, username));
-                DelayedCommands.add(new FTDelayedCommand(FTDelayedCommand.Type.PaymentCancel, rentInfo.payment.paymentUid, null));
+                DelayedCommands.add(new FTDelayedCommand(FTDelayedCommand.Type.PaymentCancel, UUID.fromString(rentInfo.paymentUid), null));
                 return;
             }
 
             try {
-                cancelPayment(rentInfo.payment.paymentUid.toString());
+                cancelPayment(rentInfo.paymentUid);
             }
             catch (EServiceUnavailableError e)
             {
-                DelayedCommands.add(new FTDelayedCommand(FTDelayedCommand.Type.PaymentCancel, rentInfo.payment.paymentUid, null));
+                DelayedCommands.add(new FTDelayedCommand(FTDelayedCommand.Type.PaymentCancel, UUID.fromString(rentInfo.paymentUid), null));
                 return;
             }
         }
@@ -607,10 +607,13 @@ public class CGateway {
             dateTo = dateTo.substring(0, ind2);
         }
 
-        MRentCarInfo rentCarInfo = getRentCarInfo(obj.getString("v4_car_uid"));
-        MRentPaymentInfo rentPaymentInfo = getRentPaymentInfo(obj.getString("v3_payment_uid"));
+        String carUidStr = obj.getString("v4_car_uid");
+        String paymentUidStr = obj.getString("v3_payment_uid");
 
-        return new MRentInfo(rentalUid, status, dateFrom, dateTo, rentCarInfo, rentPaymentInfo);
+        MRentCarInfo rentCarInfo = getRentCarInfo(carUidStr);
+        MRentPaymentInfo rentPaymentInfo = getRentPaymentInfo(paymentUidStr);
+
+        return new MRentInfo(rentalUid, status, dateFrom, dateTo, rentCarInfo, rentPaymentInfo, paymentUidStr, carUidStr);
     }
 
     private MCarInfo parseCarInfo(JSONObject obj)
